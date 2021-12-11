@@ -109,6 +109,7 @@ jobs:
           # Best compatibility, even with older releases of macOS.
           MACOSX_DEPLOYMENT_TARGET: "10.9"
           CIBW_ENVIRONMENT_MACOS: BZIP2_DIR=/usr/local/opt/bzip2 LDFLAGS+="-L/usr/local/opt/bzip2/lib -L/usr/local/opt/zlib/lib" CPPFLAGS+="-I/usr/local/opt/bzip2/include -I/usr/local/opt/zlib/include" PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig"
+          CIBW_SKIP: '*-musllinux_*'
 
 
 
