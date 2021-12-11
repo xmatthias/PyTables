@@ -21,8 +21,8 @@ jobs:
     strategy:
       matrix:
         arch: [x86_64, aarch64]
-        # TODO: readd macos-10.15
-        os: [ 'ubuntu-18.04', 'windows-latest' ]
+        # TODO: readd
+        os: [ 'ubuntu-18.04', 'windows-latest', 'macos-10.15']
         exclude:
         # excludes node 8 on macOS
         - os: macos-10.15
@@ -60,10 +60,6 @@ jobs:
           channels: defaults,conda-forge
           use-only-tar-bz2: true
 
-      # - uses: docker/setup-qemu-action@v1
-      #   if:  ${{matrix.arch}} == 'aarch64' and startsWith(matrix.os, 'ubuntu')
-      #   name: Set up QEMU
-
       - name: Install cibuildwheel
         run: |
           pip install cibuildwheel==2.3.0
@@ -96,7 +92,8 @@ jobs:
         run: cibuildwheel --output-dir wheelhouse
         env:
 
-          CIBW_BUILD: "cp36-manylinux_x86_64 cp37-manylinux_x86_64 cp38-manylinux_x86_64 cp39-manylinux_x86_64 cp310-manylinux_x86_64 cp36-macosx_x86_64 cp37-macosx_x86_64 cp38-macosx_x86_64 cp39-macosx_x86_64 cp310-macosx_x86_64"
+          CIBW_ARCHS_LINUX: ${{matrix.arch}}
+          CIBW_BUILD: "cp36-manylinux_${{matrix.arch}} cp37-manylinux_${{matrix.arch}} cp38-manylinux_${{matrix.arch}} cp39-manylinux_${{matrix.arch}} cp310-manylinux_${{matrix.arch}} cp36-macosx_${{matrix.arch}} cp37-macosx_${{matrix.arch}} cp38-macosx_${{matrix.arch}} cp39-macosx_${{matrix.arch}} cp310-macosx_${{matrix.arch}}"
           CIBW_ENVIRONMENT: "PYTABLES_NO_EMBEDDED_LIBS=true DISABLE_AVX2=true"
           CIBW_BEFORE_BUILD: "pip install --requirement=requirements.txt --requirement=requirements-dev.txt"
           CIBW_BUILD_VERBOSITY: 3
