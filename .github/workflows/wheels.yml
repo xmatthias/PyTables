@@ -134,7 +134,7 @@ jobs:
         if: contains(matrix.os, 'ubuntu')
         run: cibuildwheel --output-dir wheelhouse
         env:
-          CIBW_BUILD: "cp36-manylinux_i686 cp37-manylinux_i686 cp38-manylinux_i686 cp39-manylinux_i686 cp10-manylinux_i686"
+          CIBW_BUILD: "cp36-manylinux_i686 cp37-manylinux_i686 cp38-manylinux_i686 cp39-manylinux_i686 cp310-manylinux_i686"
 
           CIBW_MANYLINUX_I686_IMAGE: manylinux2010
 
