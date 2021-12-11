@@ -21,7 +21,12 @@ jobs:
     strategy:
       matrix:
         arch: [x86_64, aarch64]
-        os: [ 'ubuntu-18.04', 'macos-10.15', 'windows-latest' ]
+        # TODO: readd macos-10.15
+        os: [ 'ubuntu-18.04', 'windows-latest' ]
+        exclude:
+        # excludes node 8 on macOS
+        - os: macos-10.15
+          arch: aarch64
 
     steps:
 
@@ -55,13 +60,13 @@ jobs:
           channels: defaults,conda-forge
           use-only-tar-bz2: true
 
-      - uses: docker/setup-qemu-action@v1
-        if:  ${{matrix.arch}} == 'aarch64'
-        name: Set up QEMU
+      # - uses: docker/setup-qemu-action@v1
+      #   if:  ${{matrix.arch}} == 'aarch64' and startsWith(matrix.os, 'ubuntu')
+      #   name: Set up QEMU
 
       - name: Install cibuildwheel
         run: |
-          pip install cibuildwheel==1.8.0
+          pip install cibuildwheel==2.3.0
 
       # General note:
       # We wanted to handle this all within a single `cibuildwheel` action,
