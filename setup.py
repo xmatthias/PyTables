@@ -593,7 +593,7 @@ if __name__ == "__main__":
     # CFLAGS.append("-DH5_NO_DEPRECATED_SYMBOLS")
 
     # Do not use numpy deprecated API
-    # CFLAGS.append("-DNPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION")
+    CFLAGS.append("-DNPY_NO_DEPRECATED_API=NPY_1_7_API_VERSION")
 
     # Try to locate the compulsory and optional libraries.
     lzo2_enabled = False
@@ -750,6 +750,7 @@ if __name__ == "__main__":
 
         if os.name == "nt" and package.tag in ["HDF5"]:
             # hdf5.dll usually depends on zlib.dll
+            import ctypes.util
             z_lib_path = ctypes.util.find_library("zlib.dll")
             if z_lib_path:
                 print(f"* Adding zlib.dll (hdf5 dependency): ``{z_lib_path}``")
