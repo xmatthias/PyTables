@@ -96,7 +96,7 @@ jobs:
         run: cibuildwheel --output-dir wheelhouse
         env:
 
-          CIBW_BUILD: "cp36-manylinux_x86_64 cp37-manylinux_x86_64 cp38-manylinux_x86_64 cp39-manylinux_x86_64 cp36-macosx_x86_64 cp37-macosx_x86_64 cp38-macosx_x86_64 cp39-macosx_x86_64"
+          CIBW_BUILD: "cp36-manylinux_x86_64 cp37-manylinux_x86_64 cp38-manylinux_x86_64 cp39-manylinux_x86_64 cp310-manylinux_x86_64 cp36-macosx_x86_64 cp37-macosx_x86_64 cp38-macosx_x86_64 cp39-macosx_x86_64 cp310-macosx_x86_64"
           CIBW_ENVIRONMENT: "PYTABLES_NO_EMBEDDED_LIBS=true DISABLE_AVX2=true"
           CIBW_BEFORE_BUILD: "pip install --requirement=requirements.txt --requirement=requirements-dev.txt"
           CIBW_BUILD_VERBOSITY: 3
@@ -133,7 +133,7 @@ jobs:
         if: contains(matrix.os, 'ubuntu')
         run: cibuildwheel --output-dir wheelhouse
         env:
-          CIBW_BUILD: "cp36-manylinux_i686 cp37-manylinux_i686 cp38-manylinux_i686 cp39-manylinux_i686"
+          CIBW_BUILD: "cp36-manylinux_i686 cp37-manylinux_i686 cp38-manylinux_i686 cp39-manylinux_i686 cp10-manylinux_i686"
 
           CIBW_MANYLINUX_I686_IMAGE: manylinux2010
 
