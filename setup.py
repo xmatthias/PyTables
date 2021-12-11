@@ -828,10 +828,10 @@ if __name__ == "__main__":
     setuptools_kwargs["scripts"] = []
 
     # Copy additional data for packages that need it.
-    #setuptools_kwargs["package_data"] = {
-    #    "tables.tests": ["*.h5", "*.mat"],
-    #    "tables.nodes.tests": ["*.dat", "*.xbm", "*.h5"],
-    #}
+    setuptools_kwargs["package_data"] = {
+       "tables.tests": ["*.h5", "*.mat"],
+       "tables.nodes.tests": ["*.dat", "*.xbm", "*.h5"],
+    }
 
     # Having the Python version included in the package name makes managing a
     # system with multiple versions of Python much easier.
@@ -1054,6 +1054,7 @@ Programming Language :: Python :: 3.6
 Programming Language :: Python :: 3.7
 Programming Language :: Python :: 3.8
 Programming Language :: Python :: 3.9
+Programming Language :: Python :: 3.10
 Topic :: Database
 Topic :: Software Development :: Libraries :: Python Modules
 Topic :: System :: Archiving
