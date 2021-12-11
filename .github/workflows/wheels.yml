@@ -39,7 +39,7 @@ jobs:
           python-version: '3.9'
 
       - name: Set up QEMU
-        if: ${{matrix.arch}} == 'aarch64' && contains(matrix.os, 'ubuntu')
+        if: contains(matrix.os, 'ubuntu')
         uses: docker/setup-qemu-action@v1
 
       - name: Apply caching
