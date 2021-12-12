@@ -41,9 +41,9 @@ environment:
 
 install:
   - powershell .\\ci\\appveyor\\missing-headers.ps1
-  - "set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
   - python -m pip install requests
   - python ci\\appveyor\\get_hdf5_win.py
+  - "set PATH=%PYTHON%;%PYTHON%\\Scripts;%HDF5_DIR%\\bin;%PATH%"
 
 build_script:
   - conda config --add channels conda-forge
