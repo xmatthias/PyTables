@@ -910,8 +910,9 @@ if __name__ == "__main__":
                 # (present in all x86/amd64 architectures since 2003)
                 def_macros += [("__SSE2__", 1)]
             else:
-                # On UNIX, both gcc and clang understand -msse2
-                CFLAGS.append("-msse2")
+                if os.uname()[4] != 'aarch64':
+                    # On UNIX, both gcc and clang understand -msse2, but not on aarch64
+                    CFLAGS.append("-msse2")
             blosc_sources += blosc_path.glob("*sse2*.c")
         # AVX2
         if "avx2" in cpu_flags and "DISABLE_AVX2" not in os.environ:
