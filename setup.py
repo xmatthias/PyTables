@@ -177,7 +177,10 @@ if __name__ == "__main__":
         default_runtime_dirs.append(
             Path(sys.prefix) / "Lib" / "site-packages" / "tables"
         )
-        print(default_runtime_dirs)
+        hdf5_dll_path = Path(sys.prefix) / "Library" / "lib"
+        print(f"-->Adding: {hdf5_dll_path} to os.add_dll_directory")
+        # C:\Miniconda37-x64\envs\build_env\Library\lib
+        os.add_dll_directory(hdf5_dll_path)
 
     # Gcc 4.0.1 on Mac OS X 10.4 does not seem to include the default
     # header and library paths.  See ticket #18.
