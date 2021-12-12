@@ -44,7 +44,7 @@ build_script:
   - conda config --add channels conda-forge
   - conda create --yes -n build_env python=%PYTHON_VERSION% %BUILD_DEPENDS%
   - activate build_env
-  - python ci/appveyor/fix_paths.py C:\Miniconda37-x64\envs\build_env\lib\site-packages
+
   # Build wheel
   - "%CMD_IN_ENV% python setup.py bdist_wheel"
 
