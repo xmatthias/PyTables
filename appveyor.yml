@@ -44,6 +44,8 @@ build_script:
   - conda config --add channels conda-forge
   - conda create --yes -n build_env python=%PYTHON_VERSION% %BUILD_DEPENDS%
   - dir C:\Miniconda37-x64\envs\build_env\Library\lib
+  - cp C:\Miniconda37-x64\envs\build_env\Library\bin\hdf5.dll .
+  - cp C:\Miniconda37-x64\envs\build_env\Library\lib\hdf5.lib .
   - activate build_env
 
   # Build wheel
