@@ -42,11 +42,11 @@ install:
 
 build_script:
   - conda config --add channels conda-forge
-  - conda create --yes -n build_env python=%PYTHON_VERSION% %BUILD_DEPENDS%
+  - conda create --yes -n build_env python=%PYTHON_VERSION% wheel>=0.37.0 %BUILD_DEPENDS%
   - activate build_env
 
   # Build wheel
-  - "%CMD_IN_ENV% python setup.py bdist_wheel --single-version-externally-managed"
+  - "%CMD_IN_ENV% python setup.py bdist_wheel"
 
 test_script:
   # create test env
