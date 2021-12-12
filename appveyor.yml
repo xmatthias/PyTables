@@ -43,6 +43,7 @@ install:
 build_script:
   - conda config --add channels conda-forge
   - conda create --yes -n build_env python=%PYTHON_VERSION% %BUILD_DEPENDS%
+  - dir C:\Miniconda37-x64\envs\build_env\Library\lib
   - activate build_env
 
   # Build wheel
