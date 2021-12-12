@@ -2,25 +2,23 @@
 
 """Setup script for the tables package"""
 
-import os
-import sys
 import ctypes
+import distutils.spawn
+import os
+import subprocess
+import sys
 import tempfile
 import textwrap
-import subprocess
-from pathlib import Path
-
-# Using ``setuptools`` enables lots of goodies
-from setuptools import setup, find_packages
-import pkg_resources
-
+from distutils.ccompiler import new_compiler
 from distutils.core import Extension
 from distutils.dep_util import newer
 from distutils.util import convert_path
-from distutils.ccompiler import new_compiler
 from distutils.version import LooseVersion
-import distutils.spawn
+from pathlib import Path
 
+import pkg_resources
+# Using ``setuptools`` enables lots of goodies
+from setuptools import find_packages, setup
 # We need to avoid importing numpy until we can be sure it's installed
 # This approach is based on this SO answer http://stackoverflow.com/a/21621689
 # This is also what pandas does.
@@ -177,7 +175,7 @@ if __name__ == "__main__":
         default_runtime_dirs.append(
             Path(sys.prefix) / "Lib" / "site-packages" / "tables"
         )
-        hdf5_dll_path = Path(sys.prefix) / "Library" / "lib"
+        hdf5_dll_path = Path(sys.prefix) / "Library" / "bin"
         print(f"-->Adding: {hdf5_dll_path} to os.add_dll_directory")
         # C:\Miniconda37-x64\envs\build_env\Library\lib
         os.add_dll_directory(hdf5_dll_path)
