@@ -22,15 +22,15 @@ environment:
       PYTHON_VERSION: "3.7"
       PYTHON_ARCH: "64"
 
-    - PYTHON: "C:\\Miniconda38-x64"
+    - PYTHON: "C:\\Miniconda37-x64"
       PYTHON_VERSION: "3.8"
       PYTHON_ARCH: "64"
 
-    - PYTHON: "C:\\Miniconda38-x64"
+    - PYTHON: "C:\\Miniconda37-x64"
       PYTHON_VERSION: "3.9"
       PYTHON_ARCH: "64"
 
-    - PYTHON: "C:\\Miniconda38-x64"
+    - PYTHON: "C:\\Miniconda37-x64"
       PYTHON_VERSION: "3.10"
       PYTHON_ARCH: "64"
 
