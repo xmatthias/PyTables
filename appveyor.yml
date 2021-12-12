@@ -1,16 +1,13 @@
 image:
-  # - Visual Studio 2015
-  - Visual Studio 2019
+  - Visual Studio 2015
 
 environment:
   PACKAGE_NAME: tables
-  # BUILD_DEPENDS: "numpy>=1.8.0 numexpr>=2.5.2 cython bzip2 hdf5"
-  BUILD_DEPENDS: "numpy>=1.8.0 numexpr>=2.5.2 cython bzip2"
+  BUILD_DEPENDS: "numpy>=1.8.0 numexpr>=2.5.2 cython bzip2 hdf5"
   TEST_DEPENDS: "numpy>=1.8.0 numexpr>=2.5.2"
   # Make setup.py include conda specific dll's in wheel
   BUILDWHEEL: True
-  HDF5_VERSION: 1.12.1
-  HDF5_DIR: "C:\\temp\\hdf5\\"
+
   global:
     # SDK v7.0 MSVC Express 2008's SetEnv.cmd script will fail if the
     # /E:ON and /V:ON options are not enabled in the batch script intepreter
@@ -41,9 +38,7 @@ environment:
 
 install:
   - powershell .\\ci\\appveyor\\missing-headers.ps1
-  - python -m pip install requests
-  - python ci\\appveyor\\get_hdf5_win.py
-  - "set PATH=%PYTHON%;%PYTHON%\\Scripts;%HDF5_DIR%\\bin;%PATH%"
+  - "set PATH=%PYTHON%;%PYTHON%\\Scripts;%PATH%"
 
 build_script:
   - conda config --add channels conda-forge

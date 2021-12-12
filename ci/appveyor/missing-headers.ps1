@@ -16,12 +16,6 @@ function InstallMissingHeaders () {
     Foreach ($i in $urls) {
         $url = $i[0]
         $filename = $i[1]
-        if (Test-Path $include_dir) {
-            Write-Host $include_dir "exists"
-        } else {
-            Write-Host $include_dir "does not exist"
-
-        }
 
         $filepath = "$include_dir\$filename"
         if (Test-Path $filepath) {
