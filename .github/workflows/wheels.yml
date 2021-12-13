@@ -22,11 +22,8 @@ jobs:
     strategy:
       matrix:
         # os: [ubuntu-latest, windows-latest, macos-latest]
-        arch: [x86_64, aarch64]
         os: [ubuntu-latest, macos-latest]
-        exclude:
-          - os: macos-latest
-            arch: aarch64
+        arch: [x86_64, aarch64]
 
     steps:
       - uses: actions/checkout@v2
@@ -34,7 +31,7 @@ jobs:
       - uses: actions/setup-python@v2
         name: Install Python
         with:
-          python-version: '3.7'
+          python-version: '3.9'
 
       - uses: docker/setup-qemu-action@v1
         if: startsWith(matrix.os, 'ubuntu')
@@ -45,31 +42,18 @@ jobs:
           python -m pip install --upgrade cibuildwheel
 
       - name: Build wheels
-        if: startsWith(matrix.os, 'ubuntu')
         run: |
           python -m cibuildwheel --output-dir wheelhouse
         env:
           CIBW_ARCHS_LINUX: ${{matrix.arch}}
           CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-* cp310-*"
           CIBW_BEFORE_ALL_LINUX: "yum -y update yum install -y zlib-devel bzip2-devel lzo-devel && ./ci/github/get_hdf5_if_needed.sh"
+          CIBW_BEFORE_ALL_MACOS: "./ci/github/get_hdf5_if_needed.sh"
           CIBW_BEFORE_BUILD: "pip install numpy numexpr cython>=0.29.21"
           CIBW_ENVIRONMENT: "DISABLE_AVX2='TRUE' HDF5_DIR=/tmp/hdf5 HDF5_VERSION=${{ env.HDF5_VERSION }} LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/tmp/hdf5/lib/"
           CIBW_SKIP: '*-musllinux_*'
           CIBW_TEST_COMMAND: >
             ${{ matrix.arch == 'aarch64' && '' || 'python -m tables.tests.test_all' }}
-
-      - name: Build wheels macOS
-        if: startsWith(matrix.os, 'mac')
-        run: |
-          python -m cibuildwheel --output-dir wheelhouse
-        env:
-          CIBW_ARCHS_LINUX: ${{ matrix.arch }}
-          CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-* cp310-*"
-          CIBW_BEFORE_ALL_MACOS: "./ci/github/get_hdf5_if_needed.sh"
-          CIBW_BEFORE_BUILD: "pip install numpy numexpr cython>=0.29.21"
-          CIBW_ENVIRONMENT: "DISABLE_AVX2='TRUE' HDF5_DIR=/tmp/hdf5 HDF5_VERSION=${{ env.HDF5_VERSION }} LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/tmp/hdf5/lib/"
-          CIBW_TEST_COMMAND: >
-            python -m tables.tests.test_all
 
       - uses: actions/upload-artifact@v2
         with:
@@ -84,7 +68,7 @@ jobs:
       - uses: actions/setup-python@v2
         name: Install Python
         with:
-          python-version: '3.7'
+          python-version: '3.9'
 
       - name: Install APT packages
         if: contains(${{ matrix.os }}, 'ubuntu')
