@@ -27,6 +27,9 @@ jobs:
         - os: macos-10.15
           arch: aarch64
 
+        - os: windows-latest
+          arch: aarch64
+
     steps:
 
       - name: Acquire sources
@@ -172,8 +175,8 @@ jobs:
           CIBW_ENVIRONMENT: "PYTABLES_NO_EMBEDDED_LIBS=true DISABLE_AVX2=true"
           CIBW_ENVIRONMENT_WINDOWS: 'CONDA_PREFIX="C:\\Miniconda\\envs\\build-32" PATH="$PATH;C:\\Miniconda\\envs\\build-32\\Library\\bin"'
           CIBW_BEFORE_BUILD: "pip install --requirement=requirements.txt --requirement=requirements-dev.txt"
-          CIBW_TEST_COMMAND: >
-            ${{ matrix.arch == 'aarch64' && '' || 'python -m tables.tests.test_all' }}
+          # CIBW_TEST_COMMAND: >
+            # ${{ matrix.arch == 'aarch64' && '' || 'python -m tables.tests.test_all' }}
 
       - name: Build wheels for Windows (64-bit)
         if: contains(matrix.os, 'windows')
@@ -186,8 +189,8 @@ jobs:
           CIBW_ENVIRONMENT: "PYTABLES_NO_EMBEDDED_LIBS=true DISABLE_AVX2=true"
           CIBW_ENVIRONMENT_WINDOWS: 'CONDA_PREFIX="C:\\Miniconda\\envs\\build-64" PATH="$PATH;C:\\Miniconda\\envs\\build-64\\Library\\bin"'
           CIBW_BEFORE_BUILD: "pip install --requirement=requirements.txt --requirement=requirements-dev.txt"
-          CIBW_TEST_COMMAND: >
-            ${{ matrix.arch == 'aarch64' && '' || 'python -m tables.tests.test_all' }}
+          # CIBW_TEST_COMMAND: >
+          #   ${{ matrix.arch == 'aarch64' && '' || 'python -m tables.tests.test_all' }}
 
       - uses: actions/upload-artifact@v2
         with:
