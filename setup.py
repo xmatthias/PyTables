@@ -694,7 +694,9 @@ if __name__ == "__main__":
             # save library directory if needed
             if os.name == "nt":
                 # Important to quote the libdir for Windows (Vista) systems
-                lib_dirs.append(Path(f'"{libdir}"'))
+                # TODO: Does this need to be conditional??
+                # lib_dirs.append(Path(f'"{libdir}"'))
+                lib_dirs.append(Path(f'{libdir}'))
             else:
                 lib_dirs.append(Path(libdir))
 
