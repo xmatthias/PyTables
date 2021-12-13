@@ -178,8 +178,8 @@ if __name__ == "__main__":
             Path(sys.prefix) / "Lib" / "site-packages" / "tables"
         )
         # C:\Miniconda37-x64\envs\build_env\Library\lib
-        os.add_dll_directory(Path(sys.prefix) / "Library" / "bin")
-        os.add_dll_directory(Path(sys.prefix) / "Library" / "lib")
+        # os.add_dll_directory(Path(sys.prefix) / "Library" / "bin")
+        # os.add_dll_directory(Path(sys.prefix) / "Library" / "lib")
 
     # Gcc 4.0.1 on Mac OS X 10.4 does not seem to include the default
     # header and library paths.  See ticket #18.
