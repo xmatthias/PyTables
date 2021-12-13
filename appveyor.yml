@@ -3,7 +3,7 @@ image:
 
 environment:
   PACKAGE_NAME: tables
-  BUILD_DEPENDS: "numpy>=1.8.0 numexpr>=2.5.2 cython bzip2 hdf5"
+  BUILD_DEPENDS: "numpy>=1.8.0 numexpr>=2.5.2 cython bzip2 hdf5 blosc"
   TEST_DEPENDS: "numpy>=1.8.0 numexpr>=2.5.2"
   # Make setup.py include conda specific dll's in wheel
   BUILDWHEEL: True
