@@ -21,10 +21,9 @@ jobs:
     strategy:
       matrix:
         arch: [x86_64, aarch64]
-        # TODO: readd
         os: [ 'ubuntu-latest', 'windows-latest', 'macos-10.15']
         exclude:
-        # excludes node 8 on macOS
+        # excludes aarch64 on macOS
         - os: macos-10.15
           arch: aarch64
 
@@ -111,7 +110,8 @@ jobs:
           MACOSX_DEPLOYMENT_TARGET: "10.9"
           CIBW_ENVIRONMENT_MACOS: BZIP2_DIR=/usr/local/opt/bzip2 LDFLAGS+="-L/usr/local/opt/bzip2/lib -L/usr/local/opt/zlib/lib" CPPFLAGS+="-I/usr/local/opt/bzip2/include -I/usr/local/opt/zlib/include" PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig"
           CIBW_SKIP: '*-musllinux_*'
-
+          CIBW_TEST_COMMAND: >
+            ${{ matrix.arch == 'aarch64' && '' || 'python -m tables.tests.test_all' }}
 
 
       # The workhorse for Linux 32-bit.
@@ -143,6 +143,8 @@ jobs:
           CIBW_BEFORE_ALL_LINUX: "yum install -y bzip2-devel hdf5-devel lz4-devel lzo-devel snappy-devel libzstd-devel zlib-devel wget; BASEURL=http://ftp.altlinux.org/pub/distributions/ALTLinux/Sisyphus/i586/RPMS.classic; wget $BASEURL/libblosc-1.18.1-alt1.i586.rpm $BASEURL/libblosc-devel-1.18.1-alt1.i586.rpm; rpm --install --nodeps *.rpm"
           CIBW_BEFORE_BUILD: "pip install --requirement=requirements.txt --requirement=requirements-dev.txt"
           CIBW_SKIP: '*-musllinux_*'
+          CIBW_TEST_COMMAND: >
+            ${{ matrix.arch == 'aarch64' && '' || 'python -m tables.tests.test_all' }}
 
 
       # The workhorses for Windows.
@@ -163,28 +165,29 @@ jobs:
         if: contains(matrix.os, 'windows')
         run: cibuildwheel --output-dir wheelhouse
         env:
-          # FIXME: Unfortunately, building for Python 3.9 on Windows fails with "fatal error LNK1181: cannot open input file 'hdf5.lib'"
-          CIBW_BUILD: "cp36-win32 cp37-win32 cp38-win32"
+          CIBW_BUILD: "cp36-win32 cp37-win32 cp38-win32 cp39-win32 cp310-win32"
 
           CIBW_BEFORE_ALL_WINDOWS: "conda create --yes --name=build-32 && conda activate build-32 && conda config --env --set subdir win-32 && conda install --yes blosc bzip2 hdf5 lz4 lzo snappy zstd zlib"
 
           CIBW_ENVIRONMENT: "PYTABLES_NO_EMBEDDED_LIBS=true DISABLE_AVX2=true"
           CIBW_ENVIRONMENT_WINDOWS: 'CONDA_PREFIX="C:\\Miniconda\\envs\\build-32" PATH="$PATH;C:\\Miniconda\\envs\\build-32\\Library\\bin"'
           CIBW_BEFORE_BUILD: "pip install --requirement=requirements.txt --requirement=requirements-dev.txt"
+          CIBW_TEST_COMMAND: >
+            ${{ matrix.arch == 'aarch64' && '' || 'python -m tables.tests.test_all' }}
 
       - name: Build wheels for Windows (64-bit)
         if: contains(matrix.os, 'windows')
         run: cibuildwheel --output-dir wheelhouse
         env:
-          # FIXME: Unfortunately, building for Python 3.9 on Windows fails with "fatal error LNK1181: cannot open input file 'hdf5.lib'"
-          CIBW_BUILD: "cp36-win_amd64 cp37-win_amd64 cp38-win_amd64"
+          CIBW_BUILD: "cp36-win_amd64 cp37-win_amd64 cp38-win_amd64 cp39-win_amd64 cp310-win_amd64"
 
           CIBW_BEFORE_ALL_WINDOWS: "conda create --yes --name=build-64 && conda activate build-64 && conda config --env --set subdir win-64 && conda install --yes blosc bzip2 hdf5 lz4 lzo snappy zstd zlib"
 
           CIBW_ENVIRONMENT: "PYTABLES_NO_EMBEDDED_LIBS=true DISABLE_AVX2=true"
           CIBW_ENVIRONMENT_WINDOWS: 'CONDA_PREFIX="C:\\Miniconda\\envs\\build-64" PATH="$PATH;C:\\Miniconda\\envs\\build-64\\Library\\bin"'
           CIBW_BEFORE_BUILD: "pip install --requirement=requirements.txt --requirement=requirements-dev.txt"
-
+          CIBW_TEST_COMMAND: >
+            ${{ matrix.arch == 'aarch64' && '' || 'python -m tables.tests.test_all' }}
 
       - uses: actions/upload-artifact@v2
         with:
