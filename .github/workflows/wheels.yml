@@ -219,7 +219,7 @@ jobs:
 
       - name: Install tables
         run: |
-          pip install -r requirements.txt
+          pip install numpy>=1.19.0 numexpr>=2.6.2
           pip install --no-index --find-links wheelhouse/artifact/ tables
         
       - name: Run tests
