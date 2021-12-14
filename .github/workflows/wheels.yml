@@ -198,7 +198,7 @@ jobs:
           path: ./wheelhouse/*.whl
 
   test_wheels:
-    depends-on: build_wheels
+    needs: build_wheels
     name: Test wheels on ${{matrix.arch}} for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
