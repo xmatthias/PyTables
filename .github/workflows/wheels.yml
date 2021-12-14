@@ -183,11 +183,11 @@ jobs:
         run: cibuildwheel --output-dir wheelhouse
         env:
           CIBW_BUILD: "cp36-win_amd64 cp37-win_amd64 cp38-win_amd64 cp39-win_amd64 cp310-win_amd64"
-          CIBW_BEFORE_ALL_WINDOWS: "conda create --yes --name=build-64 && conda activate build-64 && conda config --env --set subdir win-64 && conda install --yes blosc bzip2 hdf5 lz4 lzo snappy zstd zlib && pip install delvewheel"
+          CIBW_BEFORE_ALL_WINDOWS: "conda create --yes --name=build-64 && conda activate build-64 && conda config --env --set subdir win-64 && conda install --yes blosc bzip2 hdf5 lz4 lzo snappy zstd zlib"
 
           CIBW_ENVIRONMENT: "PYTABLES_NO_EMBEDDED_LIBS=true DISABLE_AVX2=true"
           CIBW_ENVIRONMENT_WINDOWS: 'CONDA_PREFIX="C:\\Miniconda\\envs\\build-64" PATH="$PATH;C:\\Miniconda\\envs\\build-64\\Library\\bin"'
-          CIBW_BEFORE_BUILD: "pip install --requirement=requirements.txt --requirement=requirements-dev.txt"
+          CIBW_BEFORE_BUILD: "pip install --requirement=requirements.txt --requirement=requirements-dev.txt delvewheel"
           CIBW_REPAIR_WHEEL_COMMAND_WINDOWS: "delvewheel repair -w {dest_dir} {wheel}"
           # CIBW_TEST_COMMAND: >
           #   ${{ matrix.arch == 'aarch64' && '' || 'python -m tables.tests.test_all' }}
