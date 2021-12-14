@@ -219,7 +219,7 @@ jobs:
 
       - name: Install tables
         run: |
-          pip install --no-index --find-links wheelhouse/artifact/ pytables
+          pip install --find-links wheelhouse/artifact/ tables
         
       - name: Run tests
         run: |
