@@ -23,6 +23,7 @@ jobs:
         arch: [x86_64, aarch64]
         # os: [ 'ubuntu-latest', 'windows-latest', 'macos-10.15']
         os: [ 'windows-latest']
+        python: ['3.7', '3.8', '3.9','3.10']
         exclude:
         # excludes aarch64 on macOS
         - os: macos-10.15
@@ -211,9 +212,18 @@ jobs:
         with:
           path: ./wheelhouse/
 
+      - name: Install Python ${{ matrix.python }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: matrix.python     
 
-      - name: Display structure of downloaded files
-        run: ls -R ./wheelhouse/
+      - name: Install tables
+        run: |
+          pip install --no-index --find-links wheelhouse/artifact/ pytables
+        
+      - name: Run tests
+        run: |
+          python -m tables.tests.test_all
 
   build_sdist:
     name: Build source distribution
