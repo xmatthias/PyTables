@@ -21,7 +21,8 @@ jobs:
     strategy:
       matrix:
         arch: [x86_64, aarch64]
-        os: [ 'ubuntu-latest', 'windows-latest', 'macos-10.15']
+        # os: [ 'ubuntu-latest', 'windows-latest', 'macos-10.15']
+        os: [ 'windows-latest']
         exclude:
         # excludes aarch64 on macOS
         - os: macos-10.15
@@ -93,7 +94,7 @@ jobs:
           brew reinstall --build-from-source --no-binaries --force c-blosc bzip2 hdf5 lz4 lzo snappy zstd zlib
           brew link --overwrite --force bzip2 zlib
 
-      - name: Build wheels for Linux or macOS (64-bit)
+      - name: Build wheels for Linux or macOS (64-bit | aarch64)
         if: contains(matrix.os, 'ubuntu') || contains(matrix.os, 'macos')
         run: cibuildwheel --output-dir wheelhouse
         env:
@@ -113,8 +114,8 @@ jobs:
           MACOSX_DEPLOYMENT_TARGET: "10.9"
           CIBW_ENVIRONMENT_MACOS: BZIP2_DIR=/usr/local/opt/bzip2 LDFLAGS+="-L/usr/local/opt/bzip2/lib -L/usr/local/opt/zlib/lib" CPPFLAGS+="-I/usr/local/opt/bzip2/include -I/usr/local/opt/zlib/include" PKG_CONFIG_PATH="/usr/local/opt/zlib/lib/pkgconfig"
           CIBW_SKIP: '*-musllinux_*'
-          CIBW_TEST_COMMAND: >
-            ${{ matrix.arch == 'aarch64' && '' || 'python -m tables.tests.test_all' }}
+          # CIBW_TEST_COMMAND: >
+          #   ${{ matrix.arch == 'aarch64' && '' || 'python -m tables.tests.test_all' }}
 
 
       # The workhorse for Linux 32-bit.
@@ -135,7 +136,7 @@ jobs:
       # paired with obtaining `libblosc` packages from "ALT Linux Sisyphus".
 
       - name: Build wheels for Linux (32-bit)
-        if: contains(matrix.os, 'ubuntu')
+        if: contains(matrix.os, 'ubuntu') && matrix.arch != 'aarch64'
         run: cibuildwheel --output-dir wheelhouse
         env:
           CIBW_BUILD: "cp36-manylinux_i686 cp37-manylinux_i686 cp38-manylinux_i686 cp39-manylinux_i686 cp310-manylinux_i686"
@@ -147,7 +148,7 @@ jobs:
           CIBW_BEFORE_BUILD: "pip install --requirement=requirements.txt --requirement=requirements-dev.txt"
           CIBW_SKIP: '*-musllinux_*'
           CIBW_TEST_COMMAND: >
-            ${{ matrix.arch == 'aarch64' && '' || 'python -m tables.tests.test_all' }}
+            python -m tables.tests.test_all
 
 
       # The workhorses for Windows.
