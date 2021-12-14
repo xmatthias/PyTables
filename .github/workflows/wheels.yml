@@ -21,8 +21,7 @@ jobs:
     strategy:
       matrix:
         arch: [x86_64, aarch64]
-        # os: [ 'ubuntu-latest', 'windows-latest', 'macos-10.15']
-        os: [ 'windows-latest']
+        os: [ 'ubuntu-latest', 'windows-latest', 'macos-10.15']
         exclude:
         # excludes aarch64 on macOS
         - os: macos-10.15
@@ -199,12 +198,11 @@ jobs:
 
   test_wheels:
     needs: build_wheels
-    name: Test ${{ matrix.python }} wheels for ${{ matrix.os }}
+    name: Test ${{ python-version }} wheels for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        # os: [ 'ubuntu-latest', 'windows-latest', 'macos-10.15']
-        os: [ 'windows-latest']
+        os: [ 'ubuntu-latest', 'windows-latest', 'macos-10.15']
         python-version: ['3.7', '3.8', '3.9','3.10']
 
     steps:
@@ -212,17 +210,17 @@ jobs:
         with:
           path: ./wheelhouse/
 
-      - name: Install Python ${{ matrix.python }}
+      - name: Install Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}   
 
-      - name: Install tables
+      - name: Install tables on ${{ matrix.python-version }}
         run: |
           pip install numpy>=1.19.0 numexpr>=2.6.2
           pip install --no-index --find-links wheelhouse/artifact/ tables
         
-      - name: Run tests
+      - name: Run tests on ${{ matrix.python-version }}
         run: |
           python -m tables.tests.test_all
 
