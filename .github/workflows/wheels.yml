@@ -198,7 +198,7 @@ jobs:
 
   test_wheels:
     needs: build_wheels
-    name: Test ${{ python-version }} wheels for ${{ matrix.os }}
+    name: Test ${{ matrix.python-version }} wheels for ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
