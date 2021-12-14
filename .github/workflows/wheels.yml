@@ -42,6 +42,7 @@ jobs:
           python -m pip install --upgrade cibuildwheel
 
       - name: Build wheels
+        if: matrix.arch != 'aarch64'
         run: |
           python -m cibuildwheel --output-dir wheelhouse
         env:
@@ -54,7 +55,24 @@ jobs:
           CIBW_ENVIRONMENT: "DISABLE_AVX2='TRUE' HDF5_DIR=/tmp/hdf5 HDF5_VERSION=${{ env.HDF5_VERSION }} LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/tmp/hdf5/lib/"
           CIBW_SKIP: '*-musllinux_*'
           CIBW_TEST_COMMAND: >
-            ${{ matrix.arch == 'aarch64' && '' || 'python -m tables.tests.test_all' }}
+            python -m tables.tests.test_all
+
+      - name: Build wheels arm64
+        if: matrix.arch == 'aarch64'
+        run: |
+          python -m cibuildwheel --output-dir wheelhouse
+        env:
+          CIBW_ARCHS_LINUX: aarch64
+          CIBW_ARCHS_MACOS: arm64
+          CIBW_BUILD: "cp36-* cp37-* cp38-* cp39-* cp310-*"
+          # ARM architectures cannot build internal blosc it seems.
+          CIBW_BEFORE_ALL_LINUX: "yum -y update yum install -y zlib-devel bzip2-devel lzo-devel blosc && ./ci/github/get_hdf5_if_needed.sh"
+          CIBW_BEFORE_ALL_MACOS: "brew reinstall --build-from-source --no-binaries --force c-blosc && ./ci/github/get_hdf5_if_needed.sh"
+          CIBW_BEFORE_BUILD: "pip install numpy numexpr cython>=0.29.21"
+          CIBW_ENVIRONMENT: "DISABLE_AVX2='TRUE' HDF5_DIR=/tmp/hdf5 HDF5_VERSION=${{ env.HDF5_VERSION }} LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:/tmp/hdf5/lib/"
+          CIBW_SKIP: '*-musllinux_*'
+          # CIBW_TEST_COMMAND: >
+          #   python -m tables.tests.test_all
 
       - uses: actions/upload-artifact@v2
         with:
