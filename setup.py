@@ -2,25 +2,23 @@
 
 """Setup script for the tables package"""
 
-import os
-import sys
 import ctypes
+import distutils.spawn
+import os
+import subprocess
+import sys
 import tempfile
 import textwrap
-import subprocess
-from pathlib import Path
-
-# Using ``setuptools`` enables lots of goodies
-from setuptools import setup, find_packages
-import pkg_resources
-
+from distutils.ccompiler import new_compiler
 from distutils.core import Extension
 from distutils.dep_util import newer
 from distutils.util import convert_path
-from distutils.ccompiler import new_compiler
 from distutils.version import LooseVersion
-import distutils.spawn
+from pathlib import Path
 
+import pkg_resources
+# Using ``setuptools`` enables lots of goodies
+from setuptools import find_packages, setup
 # We need to avoid importing numpy until we can be sure it's installed
 # This approach is based on this SO answer http://stackoverflow.com/a/21621689
 # This is also what pandas does.
@@ -900,7 +898,8 @@ if __name__ == "__main__":
         # SSE2
         if "sse2" in cpu_flags:
             print("SSE2 detected and enabled")
-            CFLAGS.append("-DSHUFFLE_SSE2_ENABLED")
+            if os.uname()[4] != 'aarch64':
+                CFLAGS.append("-DSHUFFLE_SSE2_ENABLED")
             if os.name == "nt":
                 # Windows always should have support for SSE2
                 # (present in all x86/amd64 architectures since 2003)
