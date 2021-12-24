@@ -2,23 +2,25 @@
 
 """Setup script for the tables package"""
 
-import ctypes
-import distutils.spawn
 import os
-import subprocess
 import sys
+import ctypes
 import tempfile
 import textwrap
-from distutils.ccompiler import new_compiler
+import subprocess
+from pathlib import Path
+
+# Using ``setuptools`` enables lots of goodies
+from setuptools import setup, find_packages
+import pkg_resources
+
 from distutils.core import Extension
 from distutils.dep_util import newer
 from distutils.util import convert_path
+from distutils.ccompiler import new_compiler
 from distutils.version import LooseVersion
-from pathlib import Path
+import distutils.spawn
 
-import pkg_resources
-# Using ``setuptools`` enables lots of goodies
-from setuptools import find_packages, setup
 # We need to avoid importing numpy until we can be sure it's installed
 # This approach is based on this SO answer http://stackoverflow.com/a/21621689
 # This is also what pandas does.
@@ -895,19 +897,17 @@ if __name__ == "__main__":
             finally:
                 Path(fd.name).unlink()
 
-        # SSE2
-        if "sse2" in cpu_flags:
+        # SSE2 - not on aarch64s
+        if "sse2" in cpu_flags and os.uname()[4] != 'aarch64':
             print("SSE2 detected and enabled")
-            if os.uname()[4] != 'aarch64':
-                CFLAGS.append("-DSHUFFLE_SSE2_ENABLED")
+            CFLAGS.append("-DSHUFFLE_SSE2_ENABLED")
             if os.name == "nt":
                 # Windows always should have support for SSE2
                 # (present in all x86/amd64 architectures since 2003)
                 def_macros += [("__SSE2__", 1)]
             else:
-                if os.uname()[4] != 'aarch64':
-                    # On UNIX, both gcc and clang understand -msse2, but not on aarch64
-                    CFLAGS.append("-msse2")
+                # On UNIX, both gcc and clang understand -msse2, but not on aarch64
+                CFLAGS.append("-msse2")
             blosc_sources += blosc_path.glob("*sse2*.c")
         # AVX2
         if "avx2" in cpu_flags and "DISABLE_AVX2" not in os.environ:
